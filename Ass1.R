@@ -68,48 +68,50 @@ library(dagitty)
 
 g <- dagitty('
 dag {
-  "#Homeless People" [pos="0.002,-0.177"]
-  "% 12-29" [pos="0.394,0.622"]
-  "% Afr. American" [pos="-0.727,0.171"]
-  "% Bachelor" [pos="-0.189,-0.576"]
-  "% Caucasian" [pos="-1.732,0.104"]
-  "% Police Afr. American" [pos="-0.649,-0.098"]
-  "% Police Asian" [pos="-1.041,-0.208"]
-  "% Police Caucasian" [pos="-1.737,-0.232"]
-  "% asian" [pos="-1.049,0.143"]
-  "% hispanic" [pos="-1.377,0.104"]
-  "% no HS" [pos="-0.393,-1.106"]
-  "% unemployed" [pos="0.230,-0.284"]
-  "%< 9th grade" [pos="0.171,-1.181"]
-  "& Police Hispanic" [pos="-1.374,-0.220"]
-  "Median Gross Rent" [pos="-0.251,-0.007"]
-  "Violent Crimes" [pos="-0.404,0.788"]
-  "income per capita" [pos="-0.463,-0.386"]
-  "#Homeless People" -> "Violent Crimes"
-  "% 12-29" -> "Violent Crimes"
-  "% Afr. American" -> "% Police Afr. American"
-  "% Afr. American" -> "Violent Crimes"
-  "% Bachelor" -> "% unemployed"
-  "% Bachelor" -> "income per capita"
-  "% Caucasian" -> "% Police Caucasian"
-  "% Caucasian" -> "Violent Crimes"
-  "% asian" -> "% Police Asian"
-  "% asian" -> "Violent Crimes"
-  "% hispanic" -> "& Police Hispanic"
-  "% hispanic" -> "Violent Crimes"
-  "% no HS" -> "% Bachelor"
-  "% no HS" -> "% unemployed"
-  "% no HS" -> "income per capita"
-  "% unemployed" -> "#Homeless People"
-  "% unemployed" -> "Violent Crimes"
-  "%< 9th grade" -> "% no HS"
-  "%< 9th grade" -> "% unemployed"
-  "%< 9th grade" -> "income per capita"
-  "Median Gross Rent" -> "#Homeless People"
-  "income per capita" -> "Median Gross Rent"
-  "income per capita" -> "Violent Crimes"
+"Violent Crimes" [pos="-0.404,0.788"]
+agePct12t29 [pos="-0.018,0.771"]
+medRent [pos="-0.249,-0.185"]
+pctBSorMore [pos="-0.133,-0.389"]
+pctHomeless [pos="0.002,-0.177"]
+pctLess9thGrade [pos="0.171,-1.181"]
+pctNotHSGrad [pos="-0.393,-1.106"]
+pctPoliceA [pos="-0.815,-0.223"]
+pctPoliceB [pos="-0.649,-0.098"]
+pctPoliceH [pos="-1.038,-0.109"]
+pctPoliceW [pos="-1.226,-0.245"]
+pctUnemployed [pos="0.230,-0.284"]
+perCapInc [pos="-0.463,-0.386"]
+policeOperBudg [pos="-0.860,0.786"]
+racePctA [pos="-0.815,0.164"]
+racePctB [pos="-0.634,0.201"]
+racePctH [pos="-1.040,0.176"]
+racePctW [pos="-1.218,0.196"]
+agePct12t29 -> "Violent Crimes"
+medRent -> pctHomeless
+pctBSorMore -> pctUnemployed
+pctBSorMore -> perCapInc
+pctHomeless -> "Violent Crimes"
+pctLess9thGrade -> pctNotHSGrad
+pctLess9thGrade -> pctUnemployed
+pctLess9thGrade -> perCapInc
+pctNotHSGrad -> pctBSorMore
+pctNotHSGrad -> pctUnemployed
+pctNotHSGrad -> perCapInc
+pctUnemployed -> "Violent Crimes"
+pctUnemployed -> pctHomeless
+perCapInc -> "Violent Crimes"
+perCapInc -> medRent
+policeOperBudg -> "Violent Crimes"
+racePctA -> "Violent Crimes"
+racePctA -> pctPoliceA
+racePctB -> "Violent Crimes"
+racePctB -> pctPoliceB
+racePctH -> "Violent Crimes"
+racePctH -> pctPoliceH
+racePctW -> "Violent Crimes"
+racePctW -> pctPoliceW
 }
 ')
 
-# plot(g)
+#plot(g)
 
