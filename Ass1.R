@@ -1,3 +1,69 @@
+# Useful stuff:
+# Command all lines, select and then : Ctrl + Shift + C
+
+# Read file data instructions because 
+# 1. file might be corrupted
+# 2. everyone has a different path name
+
+# Steps
+# 1. Click "import dataset" right below "Environment" on the right side
+# 2. Select "from text (base)"
+# 3. Open "communities" file
+# 4. Click import
+# 5. R will do the magic for you
+initial_df <- communities
+
+# Our data did not come with the attribute names
+# instead of adding the attribute names, we manually delete Vx for every
+# x we do not want, then we change Vx to the right name
+
+# V8 = racePctBlack
+# V9 = racePctWhite
+# V10 = racePctAsian
+# V11 = racePctHisp
+# V13 = agePct12t29
+# V18 = medIncome
+# V26 = perCapInc
+# V35 = PctLess9thGrade
+# V36 = PctNotHSGrad
+# V37 = PctBSorMore
+# V38 = PctUnemployed
+# V91 = MedRent
+# V95 = NumInShelters (homeless in shelters)
+# V96 = NumStreet (homeless on street)
+# V111 = PctPoliceWhite
+# V112 = PctPoliceBlack
+# V113 = PctPoliceHisp
+# V114 = PctPoliceAsian
+# V123 = PoliceOperBudg
+# V128 = ViolentCrimesPerPop
+
+# All the vars which have to be kept
+myvars <- c("V8", "V9", "V10", "V11", "V13", "V18", "V26", "V35", "V36",
+            "V37", "V38", "V91", "V95", "V96", "V111", "V112", "V113",
+            "V114", "V123", "V128")
+
+# Remove all other vars from data
+df_2 <- initial_df[myvars]
+
+# Change column names
+colnames(df_2) <- c("racePctB", "racePctW", "racePctA", "racePctH", 
+                    "agePct12t29", "medIncome", "perCapInc", "pctLess9thGrade",
+                    "pctNotHSGrad", "pctBSorMore", "pctUnemployed", "medRent",
+                    "numInShelters", "numStreet", "pctPoliceW", "pctPoliceB", 
+                    "pctPoliceH", "pctPoliceA", "policeOperBudg", "violentCrimes"
+                    )
+
+# Change '?' with NA
+df_2[df_2 == "?"] <- NA
+# Line above can be skipped if this is done from beginning:
+# df <- read.csv("file.csv", na.strings = "?")
+
+# Keep the records which don't have NA
+df_3 <- df_2[complete.cases(df_2),]
+
+
+# Import dagitty
 library(dagitty)
 
 g <- dagitty('
@@ -44,5 +110,6 @@ dag {
   "income per capita" -> "Violent Crimes"
 }
 ')
-plot(g)
+
+# plot(g)
 
