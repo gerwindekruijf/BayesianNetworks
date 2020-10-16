@@ -14,7 +14,7 @@
 
 # Import for Gerwin
 # initial_df <- read.csv(
-#   "/Users/gerwindekruijf/Documents/RU/Bayesian Networks/communities.csv", na.strings = "?", 
+#   "/Users/gerwindekruijf/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
 #   header = FALSE)
 
 # Import for Olivier
