@@ -11,7 +11,17 @@
 # 3. Open "communities" file
 # 4. Click import
 # 5. R will do the magic for you
-initial_df <- communities
+
+# Import for Gerwin
+# initial_df <- read.csv(
+#   "/Users/gerwindekruijf/Documents/RU/Bayesian Networks/communities.csv", na.strings = "?", 
+#   header = FALSE)
+
+# Import for Olivier
+
+# Import for Dirren
+
+
 
 # Our data did not come with the attribute names
 # instead of adding the attribute names, we manually delete Vx for every
@@ -57,7 +67,6 @@ colnames(df_2) <- c("racePctB", "racePctW", "racePctA", "racePctH",
 # Change '?' with NA
 df_2[df_2 == "?"] <- NA
 # Line above can be skipped if this is done from beginning:
-# df <- read.csv("file.csv", na.strings = "?")
 
 # Keep the records which don't have NA
 df_3 <- df_2[complete.cases(df_2),]
