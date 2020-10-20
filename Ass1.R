@@ -78,44 +78,47 @@ df_3 <- df_2[complete.cases(df_2),]
 # Import dagitty
 library(dagitty)
 
-g <- dagitty('
-dag {
-agePct12t29 [pos="-0.018,0.771"]
-medRent [pos="-0.249,-0.185"]
-numStreet [pos="0.002,-0.177"]
-pctBSorMore [pos="-0.133,-0.389"]
-pctLess9thGrade [pos="0.171,-1.181"]
-pctNotHSGrad [pos="-0.393,-1.106"]
-pctPoliceA [pos="-0.815,-0.223"]
-pctPoliceB [pos="-0.649,-0.098"]
-pctPoliceH [pos="-1.038,-0.109"]
-pctPoliceW [pos="-1.226,-0.245"]
-pctUnemployed [pos="0.230,-0.284"]
-perCapInc [pos="-0.463,-0.386"]
-policeOperBudg [pos="-0.860,0.786"]
-racePctA [pos="-0.815,0.164"]
-racePctB [pos="-0.634,0.201"]
-racePctH [pos="-1.040,0.176"]
-racePctW [pos="-1.218,0.196"]
-violentCrimes [pos="-0.404,0.788"]
-agePct12t29 -> violentCrimes
-medRent -> numStreet
-medRent -> violentCrimes
-medRent -> perCapInc
-pctBSorMore -> numStreet
-pctBSorMore -> perCapInc
-pctLess9thGrade -> pctNotHSGrad
-pctLess9thGrade -> numStreet
-pctLess9thGrade -> perCapInc
-pctNotHSGrad -> pctBSorMore
-pctNotHSGrad -> numStreet
-pctNotHSGrad -> perCapInc
-pctUnemployed -> violentCrimes
-policeOperBudg -> violentCrimes
-racePctA -> violentCrimes
-racePctB -> violentCrimes
-racePctH -> violentCrimes
-racePctW -> violentCrimes
+g <- dagitty('dag 
+{
+  agePct12t29 [pos="-0.018,0.771"]
+  medRent [pos="-0.249,-0.185"]
+  numStreet [pos="0.002,-0.177"]
+  pctBSorMore [pos="-0.133,-0.389"]
+  pctLess9thGrade [pos="0.171,-1.181"]
+  pctNotHSGrad [pos="-0.393,-1.106"]
+  pctPoliceA [pos="-0.815,-0.223"]
+  pctPoliceB [pos="-0.649,-0.098"]
+  pctPoliceH [pos="-1.038,-0.109"]
+  pctPoliceW [pos="-1.226,-0.245"]
+  pctUnemployed [pos="0.230,-0.284"]
+  perCapInc [pos="-0.463,-0.386"]
+  policeOperBudg [pos="-0.860,0.786"]
+  pop [pos="0.065,0.201"]
+  racePctA [pos="-0.815,0.164"]
+  racePctB [pos="-0.634,0.201"]
+  racePctH [pos="-1.040,0.176"]
+  racePctW [pos="-1.218,0.196"]
+  violentCrimes [pos="-0.404,0.788"]
+  agePct12t29 -> violentCrimes
+  medRent -> numStreet
+  medRent -> perCapInc
+  medRent -> violentCrimes
+  pctBSorMore -> numStreet
+  pctBSorMore -> perCapInc
+  pctLess9thGrade -> numStreet
+  pctLess9thGrade -> pctNotHSGrad
+  pctLess9thGrade -> perCapInc
+  pctNotHSGrad -> numStreet
+  pctNotHSGrad -> pctBSorMore
+  pctNotHSGrad -> perCapInc
+  pctUnemployed -> violentCrimes
+  policeOperBudg -> violentCrimes
+  pop -> numStreet
+  pop -> policeOperBudg
+  racePctA -> violentCrimes
+  racePctB -> violentCrimes
+  racePctH -> violentCrimes
+  racePctW -> violentCrimes
 }
 ')
 
