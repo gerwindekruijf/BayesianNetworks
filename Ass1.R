@@ -22,7 +22,7 @@
 # Import for Dirren
 
 initial_df <- read.csv(
-     "/Users/gerwindekruijf/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
+     "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
      header = FALSE)
 
 
@@ -94,7 +94,6 @@ pctPoliceW [pos="-1.226,-0.245"]
 pctUnemployed [pos="0.230,-0.284"]
 perCapInc [pos="-0.463,-0.386"]
 policeOperBudg [pos="-0.860,0.786"]
-pop [pos="0.065,0.201"]
 racePctA [pos="-0.815,0.164"]
 racePctB [pos="-0.634,0.201"]
 racePctH [pos="-1.040,0.176"]
@@ -104,36 +103,41 @@ agePct12t29 -> violentCrimes
 medRent -> numStreet
 medRent -> perCapInc
 medRent -> violentCrimes
-pctBSorMore -> numStreet
-pctBSorMore -> perCapInc
-pctLess9thGrade -> numStreet
+pctBSorMore -> medRent
+pctLess9thGrade -> medRent
 pctLess9thGrade -> pctNotHSGrad
-pctLess9thGrade -> perCapInc
-pctNotHSGrad -> numStreet
+pctNotHSGrad -> medRent
 pctNotHSGrad -> pctBSorMore
-pctNotHSGrad -> perCapInc
 pctUnemployed -> violentCrimes
 policeOperBudg -> violentCrimes
-pop -> numStreet
-pop -> policeOperBudg
 racePctA -> violentCrimes
 racePctB -> violentCrimes
 racePctH -> violentCrimes
 racePctW -> violentCrimes
+pctLess9thGrade -> numStreet
+pctBSorMore -> numStreet
+pctNotHSGrad -> numStreet
+pctLess9thGrade -> perCapInc
+pctBSorMore -> perCapInc
+pctNotHSGrad -> perCapInc
+pctLess9thGrade -> pctBSorMore
 } 
 ')
 
+# pctLess9thGrade -> perCapInc
+# pctBSorMore -> perCapInc
+# pctNotHSGrad -> perCapInc
+
 # numStreet -> violentCrimes
-# perCapInc -> violentCrimes
 # pctUnemployed -> numStreet
 
 # Homeless = numStreet and numInShelters
-# plot(g)
+plot(g)
 # ici <- impliedConditionalIndependencies(g)
 test_results <- localTests(g, df_3, type = "cis.chisq")
 # plotLocalTestResults(test_results[1,])
 
-# threshold <- 0.06
-# good_fit <- test_results[test_results$rmsea > threshold, ]
-# print(good_fit)
+threshold <- 0.06
+good_fit <- test_results[test_results$rmsea > threshold, ]
+print(good_fit)
 
