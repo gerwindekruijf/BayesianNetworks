@@ -21,6 +21,9 @@
 
 # Import for Dirren
 
+initial_df <- read.csv(
+     "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
+     header = FALSE)
 
 
 # Our data did not come with the attribute names
@@ -97,18 +100,17 @@ racePctW [pos="-1.218,0.196"]
 violentCrimes [pos="-0.404,0.788"]
 agePct12t29 -> violentCrimes
 medRent -> numStreet
+medRent -> violentCrimes
 medRent -> perCapInc
-numStreet -> violentCrimes
-pctBSorMore -> pctUnemployed
+pctBSorMore -> numStreet
 pctBSorMore -> perCapInc
 pctLess9thGrade -> pctNotHSGrad
-pctLess9thGrade -> pctUnemployed
+pctLess9thGrade -> numStreet
 pctLess9thGrade -> perCapInc
 pctNotHSGrad -> pctBSorMore
-pctNotHSGrad -> pctUnemployed
+pctNotHSGrad -> numStreet
 pctNotHSGrad -> perCapInc
 pctUnemployed -> violentCrimes
-perCapInc -> violentCrimes
 policeOperBudg -> violentCrimes
 racePctA -> violentCrimes
 racePctB -> violentCrimes
@@ -117,10 +119,12 @@ racePctW -> violentCrimes
 }
 ')
 
+# numStreet -> violentCrimes
+# perCapInc -> violentCrimes
 # pctUnemployed -> numStreet
 
 # Homeless = numStreet and numInShelters
-# plot(g)
+plot(g)
 ici <- impliedConditionalIndependencies(g)
 test_results <- localTests(g, df_3, type = "cis.chisq")
 # plotLocalTestResults(test_results[1,])
