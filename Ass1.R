@@ -107,7 +107,6 @@ pctLess9thGrade -> perCapInc
 pctNotHSGrad -> pctBSorMore
 pctNotHSGrad -> pctUnemployed
 pctNotHSGrad -> perCapInc
-pctUnemployed -> numStreet
 pctUnemployed -> violentCrimes
 perCapInc -> violentCrimes
 policeOperBudg -> violentCrimes
@@ -118,9 +117,15 @@ racePctW -> violentCrimes
 }
 ')
 
+# pctUnemployed -> numStreet
+
 # Homeless = numStreet and numInShelters
-plot(g)
+# plot(g)
 ici <- impliedConditionalIndependencies(g)
 test_results <- localTests(g, df_3, type = "cis.chisq")
-print(test_results)
+# plotLocalTestResults(test_results[1,])
+
+threshold <- 0.06
+good_fit <- test_results[test_results$rmsea > threshold, ]
+print(good_fit)
 
