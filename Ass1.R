@@ -77,11 +77,10 @@ library(dagitty)
 
 g <- dagitty('
 dag {
-violentCrimes [pos="-0.404,0.788"]
 agePct12t29 [pos="-0.018,0.771"]
 medRent [pos="-0.249,-0.185"]
-pctBSorMore [pos="-0.133,-0.389"]
 numStreet [pos="0.002,-0.177"]
+pctBSorMore [pos="-0.133,-0.389"]
 pctLess9thGrade [pos="0.171,-1.181"]
 pctNotHSGrad [pos="-0.393,-1.106"]
 pctPoliceA [pos="-0.815,-0.223"]
@@ -95,35 +94,32 @@ racePctA [pos="-0.815,0.164"]
 racePctB [pos="-0.634,0.201"]
 racePctH [pos="-1.040,0.176"]
 racePctW [pos="-1.218,0.196"]
+violentCrimes [pos="-0.404,0.788"]
 agePct12t29 -> violentCrimes
 medRent -> numStreet
+medRent -> perCapInc
+numStreet -> violentCrimes
 pctBSorMore -> pctUnemployed
 pctBSorMore -> perCapInc
-numStreet -> violentCrimes
 pctLess9thGrade -> pctNotHSGrad
 pctLess9thGrade -> pctUnemployed
 pctLess9thGrade -> perCapInc
 pctNotHSGrad -> pctBSorMore
 pctNotHSGrad -> pctUnemployed
 pctNotHSGrad -> perCapInc
-pctUnemployed -> violentCrimes
 pctUnemployed -> numStreet
+pctUnemployed -> violentCrimes
 perCapInc -> violentCrimes
-perCapInc -> medRent
 policeOperBudg -> violentCrimes
 racePctA -> violentCrimes
-racePctA -> pctPoliceA
 racePctB -> violentCrimes
-racePctB -> pctPoliceB
 racePctH -> violentCrimes
-racePctH -> pctPoliceH
 racePctW -> violentCrimes
-racePctW -> pctPoliceW
 }
 ')
 
 # Homeless = numStreet and numInShelters
-# plot(g)
+plot(g)
 ici <- impliedConditionalIndependencies(g)
 test_results <- localTests(g, df_3, type = "cis.chisq")
 print(test_results)
