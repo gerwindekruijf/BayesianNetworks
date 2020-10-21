@@ -20,37 +20,9 @@
 # Import for Olivier
 
 # Import for Dirren
-
-initial_df <- read.csv(
-     "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
-     header = FALSE)
-
-
-# Our data did not come with the attribute names
-# instead of adding the attribute names, we manually delete Vx for every
-# x we do not want, then we change Vx to the right name
-
-# V6 = pop
-# V8 = racePctBlack
-# V9 = racePctWhite
-# V10 = racePctAsian
-# V11 = racePctHisp
-# V13 = agePct12t29
-# V18 = medIncome
-# V26 = perCapInc
-# V35 = PctLess9thGrade
-# V36 = PctNotHSGrad
-# V37 = PctBSorMore
-# V38 = PctUnemployed
-# V91 = MedRent
-# V95 = NumInShelters (homeless in shelters)
-# V96 = NumStreet (homeless on street)
-# V111 = PctPoliceWhite
-# V112 = PctPoliceBlack
-# V113 = PctPoliceHisp
-# V114 = PctPoliceAsian
-# V123 = PoliceOperBudg
-# V128 = ViolentCrimesPerPop
+# initial_df <- read.csv(
+#      "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
+#      header = FALSE)
 
 # All the vars which have to be kept
 myvars <- c("V6", "V8", "V9", "V10", "V11", "V13", "V18", "V26", "V35", "V36",
@@ -79,6 +51,7 @@ df_3 <- df_2[complete.cases(df_2),]
 # Import dagitty
 library(dagitty)
 
+# Our DAG
 g <- dagitty('dag 
 {
 agePct12t29 [pos="-0.018,0.771"]
@@ -127,17 +100,18 @@ pctLess9thGrade -> pctBSorMore
 # pctLess9thGrade -> perCapInc
 # pctBSorMore -> perCapInc
 # pctNotHSGrad -> perCapInc
-
 # numStreet -> violentCrimes
 # pctUnemployed -> numStreet
 
 # Homeless = numStreet and numInShelters
+
+
 plot(g)
 # ici <- impliedConditionalIndependencies(g)
 test_results <- localTests(g, df_3, type = "cis.chisq")
 # plotLocalTestResults(test_results[1,])
 
 threshold <- 0.06
-good_fit <- test_results[test_results$rmsea > threshold, ]
-print(good_fit)
+results_above_thres <- test_results[test_results$rmsea > threshold, ]
+print(results_above_thres)
 
