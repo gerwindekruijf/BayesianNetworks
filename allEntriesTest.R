@@ -21,32 +21,24 @@
 
 # Import for Dirren
 initial_df <- read.csv(
-     "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
-     header = FALSE)
+  "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
+  header = FALSE)
 
 # All the vars which have to be kept
 myvars <- c("V6", "V8", "V9", "V10", "V11", "V13", "V18", "V26", "V35", "V36",
-            "V37", "V38", "V91", "V95", "V96", "V111", "V112", "V113",
-            "V114", "V123", "V128")
+            "V37", "V38", "V91", "V95", "V96", "V128")
 
 # Remove all other vars from data
 df_2 <- initial_df[myvars]
+
 
 # Change column names
 colnames(df_2) <- c("pop", "racePctB", "racePctW", "racePctA", "racePctH", 
                     "agePct12t29", "medIncome", "perCapInc", "pctLess9thGrade",
                     "pctNotHSGrad", "pctBSorMore", "pctUnemployed", "medRent",
-                    "numInShelters", "numStreet", "pctPoliceW", "pctPoliceB", 
-                    "pctPoliceH", "pctPoliceA", "policeOperBudg", "violentCrimes"
-                    )
+                    "numInShelters", "numStreet", "violentCrimes")
 
-# Change '?' with NA
-df_2[df_2 == "?"] <- NA
-# Line above can be skipped if this is done from beginning:
-
-# Keep the records which don't have NA
-df_3 <- df_2[complete.cases(df_2),]
-
+df_half  <- df_2[1:(dim(df_2)[1]-1800),] 
 
 # Import dagitty
 library(dagitty)
@@ -58,38 +50,43 @@ agePct12t29 [pos="-0.018,0.771"]
 medRent [pos="-0.249,-0.185"]
 numStreet [pos="0.002,-0.177"]
 pctBSorMore [pos="-0.133,-0.389"]
-pctLess9thGrade [pos="0.171,-1.181"]
-pctNotHSGrad [pos="-0.393,-1.106"]
-pctPoliceA [pos="-0.815,-0.223"]
-pctPoliceB [pos="-0.649,-0.098"]
-pctPoliceH [pos="-1.038,-0.109"]
-pctPoliceW [pos="-1.226,-0.245"]
-pctUnemployed [pos="0.230,-0.284"]
+pctUnemployed [pos="0.230,-0.484"]
 perCapInc [pos="-0.463,-0.386"]
-policeOperBudg [pos="-0.860,0.786"]
-racePctA [pos="-0.815,0.164"]
 racePctB [pos="-0.634,0.201"]
-racePctH [pos="-1.040,0.176"]
-racePctW [pos="-1.218,0.196"]
 violentCrimes [pos="-0.404,0.788"]
-agePct12t29 -> violentCrimes
-pctLess9thGrade -> pctNotHSGrad
-pctNotHSGrad -> pctBSorMore
-pctUnemployed -> violentCrimes
-policeOperBudg <- violentCrimes
-pctLess9thGrade -> perCapInc
-pctLess9thGrade -> pctBSorMore
-pctBSorMore -> perCapInc
-pctNotHSGrad -> perCapInc
-medRent -> violentCrimes
 } 
 ')
-
- 
-# racePctA -> pctUnemployed
+# 
+# pctBSorMore -> perCapInc
+# pctBSorMore -> numStreet
 # racePctB -> pctUnemployed
+# racePctB -> perCapInc
+# pctUnemployed -> violentCrimes
+# pctUnemployed -> numStreet
+# perCapInc -> medRent
+# medRent -> numStreet
+# violentCrimes -> medRent
+# agePct12t29 -> violentCrimes
+
+# racePctA [pos="-0.815,0.164"]
+# racePctH [pos="-1.040,0.176"]
+# racePctW [pos="-1.218,0.196"]
+# racePctA -> pctUnemployed
 # racePctH -> pctUnemployed
 # racePctW -> pctUnemployed
+# racePctA -> perCapInc
+# racePctH -> perCapInc
+# racePctW -> perCapInc
+
+# pctLess9thGrade [pos="0.171,-1.181"]
+# pctNotHSGrad [pos="-0.393,-1.106"]
+# pctLess9thGrade -> pctBSorMore
+# pctLess9thGrade -> perCapInc
+# pctLess9thGrade -> pctNotHSGrad
+# pctNotHSGrad -> pctBSorMore
+# pctNotHSGrad -> perCapInc
+# pctLess9thGrade -> numStreet
+# pctNotHSGrad -> numStreet
 
 # medRent -> numStreet
 # medRent -> perCapInc
@@ -104,9 +101,9 @@ medRent -> violentCrimes
 
 plot(g)
 # ici <- impliedConditionalIndependencies(g)
-test_results <- localTests(g, df_3, type = "cis.chisq")
+test_results <- localTests(g, df_2, type = "cis.chisq")
 # plotLocalTestResults(test_results[1,])
 threshold <- 0.06
-results_above_thres <- test_results[test_results$rmsea > threshold, ]
+#results_above_thres <- test_results[test_results$rmsea > threshold, ]
+results_above_thres <- test_results[test_results$rmsea > threshold,]
 print(results_above_thres)
-
