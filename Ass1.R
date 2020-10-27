@@ -52,47 +52,55 @@ df_3 <- df_2[complete.cases(df_2),]
 library(dagitty)
 
 # Our DAG
-g <- dagitty('dag 
-{
-violentCrimes [pos="-0.404,0.788"]
-agePct16t24 [pos="-0.018,0.771"]
-medRent [pos="-0.249,-0.185"]
-pctBSorMore [pos="-0.133,-0.389"]
-numStreet [pos="0.002,-0.177"]
-pctLess9thGrade [pos="0.171,-1.181"]
-pctNotHSGrad [pos="-0.393,-1.106"]
-pctPoliceA [pos="-0.815,-0.223"]
-pctPoliceB [pos="-0.634,-0.223"]
-pctPoliceH [pos="-1.040,-0.223"]
-pctPoliceW [pos="-1.218,-0.223"]
-racePctA [pos="-0.815,0.164"]
-racePctB [pos="-0.634,0.201"]
-racePctH [pos="-1.040,0.176"]
-racePctW [pos="-1.218,0.196"]
+g <- dagitty('dag {
+bb="-6.781,-7.29,8.351,9.149"
+agePct16t24 [pos="-0.118,-2.525"]
+medRent [pos="-2.209,-1.373"]
+numStreet [pos="-1.322,-0.080"]
+pctBSorMore [pos="-0.878,-4.491"]
+pctNotHSGrad [pos="0.759,-4.562"]
+pctPoliceA [pos="2.902,-3.499"]
+pctPoliceB [pos="2.966,0.345"]
+pctPoliceH [pos="2.913,-1.001"]
+pctPoliceW [pos="2.913,-2.330"]
+pctUnemployed [pos="0.801,-2.808"]
+perCapInc [pos="-0.857,-2.649"]
+policeOperBudg [pos="0.495,2.046"]
+racePctA [pos="1.857,-3.481"]
+racePctB [pos="1.878,0.363"]
+racePctH [pos="1.867,-1.037"]
+racePctW [pos="1.846,-2.295"]
+violentCrimes [pos="-0.044,-0.204"]
+agePct16t24 -> pctUnemployed
+agePct16t24 -> perCapInc
 agePct16t24 -> violentCrimes
 medRent -> numStreet
+numStreet -> violentCrimes
 pctBSorMore -> pctUnemployed
 pctBSorMore -> perCapInc
-numStreet -> violentCrimes
-pctLess9thGrade -> pctNotHSGrad
-pctLess9thGrade -> pctUnemployed
-pctLess9thGrade -> perCapInc
-pctNotHSGrad -> pctBSorMore
 pctNotHSGrad -> pctUnemployed
 pctNotHSGrad -> perCapInc
-pctUnemployed -> violentCrimes
 pctUnemployed -> numStreet
-perCapInc -> violentCrimes
+pctUnemployed -> violentCrimes
 perCapInc -> medRent
+perCapInc -> violentCrimes
 policeOperBudg -> violentCrimes
-racePctA -> violentCrimes
+racePctA -> pctBSorMore
+racePctA -> pctNotHSGrad
 racePctA -> pctPoliceA
-racePctB -> violentCrimes
+racePctA -> violentCrimes
+racePctB -> pctBSorMore
+racePctB -> pctNotHSGrad
 racePctB -> pctPoliceB
-racePctH -> violentCrimes
+racePctB -> violentCrimes
+racePctH -> pctBSorMore
+racePctH -> pctNotHSGrad
 racePctH -> pctPoliceH
-racePctW -> violentCrimes
+racePctH -> violentCrimes
+racePctW -> pctBSorMore
+racePctW -> pctNotHSGrad
 racePctW -> pctPoliceW
+racePctW -> violentCrimes
 }
 ')
 
