@@ -20,12 +20,12 @@
 # Import for Olivier
 
 # Import for Dirren
-initial_df <- read.csv(
-     "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
-     header = FALSE)
+# initial_df <- read.csv(
+#     "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
+#     header = FALSE)
 
 # All the vars which have to be kept
-myvars <- c("V6", "V8", "V9", "V10", "V11", "V13", "V18", "V26", "V35", "V36",
+myvars <- c("V6", "V8", "V9", "V10", "V11", "V14", "V18", "V26", "V35", "V36",
             "V37", "V38", "V91", "V95", "V96", "V111", "V112", "V113",
             "V114", "V123", "V128")
 
@@ -34,7 +34,7 @@ df_2 <- initial_df[myvars]
 
 # Change column names
 colnames(df_2) <- c("pop", "racePctB", "racePctW", "racePctA", "racePctH", 
-                    "agePct12t29", "medIncome", "perCapInc", "pctLess9thGrade",
+                    "agePct16t24", "medIncome", "perCapInc", "pctLess9thGrade",
                     "pctNotHSGrad", "pctBSorMore", "pctUnemployed", "medRent",
                     "numInShelters", "numStreet", "pctPoliceW", "pctPoliceB", 
                     "pctPoliceH", "pctPoliceA", "policeOperBudg", "violentCrimes"
@@ -54,35 +54,46 @@ library(dagitty)
 # Our DAG
 g <- dagitty('dag 
 {
-agePct12t29 [pos="-0.018,0.771"]
+violentCrimes [pos="-0.404,0.788"]
+agePct16t24 [pos="-0.018,0.771"]
 medRent [pos="-0.249,-0.185"]
-numStreet [pos="0.002,-0.177"]
 pctBSorMore [pos="-0.133,-0.389"]
+numStreet [pos="0.002,-0.177"]
 pctLess9thGrade [pos="0.171,-1.181"]
 pctNotHSGrad [pos="-0.393,-1.106"]
 pctPoliceA [pos="-0.815,-0.223"]
-pctPoliceB [pos="-0.649,-0.098"]
-pctPoliceH [pos="-1.038,-0.109"]
-pctPoliceW [pos="-1.226,-0.245"]
-pctUnemployed [pos="0.230,-0.284"]
-perCapInc [pos="-0.463,-0.386"]
-policeOperBudg [pos="-0.860,0.786"]
+pctPoliceB [pos="-0.634,-0.223"]
+pctPoliceH [pos="-1.040,-0.223"]
+pctPoliceW [pos="-1.218,-0.223"]
 racePctA [pos="-0.815,0.164"]
 racePctB [pos="-0.634,0.201"]
 racePctH [pos="-1.040,0.176"]
 racePctW [pos="-1.218,0.196"]
-violentCrimes [pos="-0.404,0.788"]
-agePct12t29 -> violentCrimes
-pctLess9thGrade -> pctNotHSGrad
-pctNotHSGrad -> pctBSorMore
-pctUnemployed -> violentCrimes
-policeOperBudg <- violentCrimes
-pctLess9thGrade -> perCapInc
-pctLess9thGrade -> pctBSorMore
+agePct16t24 -> violentCrimes
+medRent -> numStreet
+pctBSorMore -> pctUnemployed
 pctBSorMore -> perCapInc
+numStreet -> violentCrimes
+pctLess9thGrade -> pctNotHSGrad
+pctLess9thGrade -> pctUnemployed
+pctLess9thGrade -> perCapInc
+pctNotHSGrad -> pctBSorMore
+pctNotHSGrad -> pctUnemployed
 pctNotHSGrad -> perCapInc
-medRent -> violentCrimes
-} 
+pctUnemployed -> violentCrimes
+pctUnemployed -> numStreet
+perCapInc -> violentCrimes
+perCapInc -> medRent
+policeOperBudg -> violentCrimes
+racePctA -> violentCrimes
+racePctA -> pctPoliceA
+racePctB -> violentCrimes
+racePctB -> pctPoliceB
+racePctH -> violentCrimes
+racePctH -> pctPoliceH
+racePctW -> violentCrimes
+racePctW -> pctPoliceW
+}
 ')
 
  
@@ -99,14 +110,11 @@ medRent -> violentCrimes
 # numStreet -> violentCrimes
 # pctUnemployed -> numStreet
 
-# Homeless = numStreet and numInShelters
-
 
 plot(g)
 # ici <- impliedConditionalIndependencies(g)
-test_results <- localTests(g, df_3, type = "cis.chisq")
-# plotLocalTestResults(test_results[1,])
-threshold <- 0.06
-results_above_thres <- test_results[test_results$rmsea > threshold, ]
-print(results_above_thres)
+test_results <- localTests(g, df_3)
+#above_p_value <- test_results[test_results$p.value < 0.05,]
+#print(above_p_value)
+#plotLocalTestResults(test_results)
 
