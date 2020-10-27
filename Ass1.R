@@ -28,12 +28,12 @@
 myvars <- c("V6", "V8", "V9", "V10", "V11", "V14", "V18", "V26", "V35", "V36",
             "V37", "V38", "V91", "V95", "V96", "V111", "V112", "V113",
             "V114", "V123", "V128")
-
+# "V123" "policeOperBudg"
 # Remove all other vars from data
 df_2 <- initial_df[myvars]
 
 # Change column names
-colnames(df_2) <- c("pop", "racePctB", "racePctW", "racePctA", "racePctH", 
+colnames(df_2) <- c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
                     "agePct16t24", "medIncome", "perCapInc", "pctLess9thGrade",
                     "pctNotHSGrad", "pctBSorMore", "pctUnemployed", "medRent",
                     "numInShelters", "numStreet", "pctPoliceW", "pctPoliceB", 
@@ -65,7 +65,7 @@ pctPoliceH [pos="2.913,-1.001"]
 pctPoliceW [pos="2.913,-2.330"]
 pctUnemployed [pos="0.062,-1.232"]
 perCapInc [pos="-1.364,-2.684"]
-pop [pos="-2.884,0.859"]
+population [pos="-2.884,0.859"]
 racePctA [pos="1.857,-3.481"]
 racePctB [pos="1.878,0.363"]
 racePctH [pos="1.867,-1.037"]
@@ -84,8 +84,12 @@ pctUnemployed -> numStreet
 pctUnemployed -> violentCrimes
 perCapInc -> medRent
 perCapInc -> violentCrimes
-pop -> medRent
-pop -> numStreet
+population -> medRent
+population -> numStreet
+population -> racePctA
+population -> racePctB
+population -> racePctW
+population -> racePctH
 racePctA -> pctBSorMore
 racePctA -> pctNotHSGrad
 racePctA -> pctPoliceA
@@ -102,8 +106,9 @@ racePctW -> pctBSorMore
 racePctW -> pctNotHSGrad
 racePctW -> pctPoliceW
 racePctW -> violentCrimes
-}
 
+agePct16t24 -> medRent
+}
 ')
 
 plot(g)
