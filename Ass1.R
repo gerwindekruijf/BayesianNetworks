@@ -110,13 +110,14 @@ racePctH -> pctBSorMore
 racePctH -> pctNotHSGrad
 racePctH -> pctPoliceH
 racePctH -> violentCrimes
-racePctW -> medRent
 racePctW -> pctBSorMore
 racePctW -> pctNotHSGrad
 racePctW -> pctPoliceW
 racePctW -> violentCrimes
 }
 ')
+
+#racePctW -> medRent
 
 plot(g)
 # ici <- impliedConditionalIndependencies(g)
