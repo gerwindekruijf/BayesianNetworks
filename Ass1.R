@@ -71,6 +71,7 @@ racePctB [pos="1.878,0.363"]
 racePctH [pos="1.867,-1.037"]
 racePctW [pos="1.846,-2.295"]
 violentCrimes [pos="-0.044,-0.204"]
+policeOperBudg -> numStreet
 agePct16t24 -> pctUnemployed
 agePct16t24 -> perCapInc
 agePct16t24 -> violentCrimes
@@ -122,7 +123,7 @@ racePctW -> violentCrimes
 plot(g)
 # ici <- impliedConditionalIndependencies(g)
 test_results <- localTests(g, df_3)
-#above_p_value <- test_results[test_results$p.value < 0.05,]
-#print(above_p_value)
-#plotLocalTestResults(test_results)
+above_p_value <- test_results[test_results$p.value < 0.05,]
+print(above_p_value)
+plotLocalTestResults(test_results)
 
