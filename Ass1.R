@@ -54,30 +54,34 @@ library(dagitty)
 # Our DAG
 g <- dagitty('dag {
 bb="-6.781,-7.29,8.351,9.149"
-agePct16t24 [pos="-1.343,-0.789"]
-medRent [pos="-2.884,-2.649"]
-numStreet [pos="-1.290,0.876"]
-pctBSorMore [pos="-0.878,-4.491"]
-pctNotHSGrad [pos="0.759,-4.562"]
-pctPoliceA [pos="2.902,-3.499"]
-pctPoliceB [pos="2.966,0.345"]
-pctPoliceH [pos="2.913,-1.001"]
-pctPoliceW [pos="2.913,-2.330"]
-pctUnemployed [pos="0.062,-1.232"]
-perCapInc [pos="-1.364,-2.684"]
-population [pos="-2.884,0.859"]
-racePctA [pos="1.857,-3.481"]
-racePctB [pos="1.878,0.363"]
-racePctH [pos="1.867,-1.037"]
-racePctW [pos="1.846,-2.295"]
-violentCrimes [pos="0.241,1.992"]
+agePct16t24 [pos="1.339,-2.611"]
+medRent [pos="-2.768,-2.523"]
+numStreet [pos="-0.530,2.369"]
+pctBSorMore [pos="-1.733,-6.248"]
+pctNotHSGrad [pos="1.170,-5.701"]
+pctPoliceA [pos="6.693,-5.312"]
+pctPoliceB [pos="6.936,0.250"]
+pctPoliceH [pos="6.841,-1.428"]
+pctPoliceW [pos="6.683,-3.193"]
+pctUnemployed [pos="-0.498,-0.121"]
+perCapInc [pos="-0.857,-3.970"]
+population [pos="-2.958,7.295"]
+racePctA [pos="4.919,-5.754"]
+racePctB [pos="5.225,0.550"]
+racePctH [pos="5.341,-1.657"]
+racePctW [pos="5.246,-3.317"]
+violentCrimes [pos="3.494,7.436"]
+agePct16t24 -> medRent
 agePct16t24 -> pctUnemployed
 agePct16t24 -> perCapInc
 agePct16t24 -> violentCrimes
 medRent -> numStreet
+medRent -> pctUnemployed
 numStreet -> violentCrimes
+pctBSorMore -> medRent
 pctBSorMore -> pctUnemployed
 pctBSorMore -> perCapInc
+pctNotHSGrad -> medRent
 pctNotHSGrad -> pctUnemployed
 pctNotHSGrad -> perCapInc
 pctUnemployed -> numStreet
@@ -88,26 +92,29 @@ population -> medRent
 population -> numStreet
 population -> racePctA
 population -> racePctB
-population -> racePctW
 population -> racePctH
+population -> racePctW
+racePctA -> medRent
+racePctA -> numStreet
 racePctA -> pctBSorMore
 racePctA -> pctNotHSGrad
 racePctA -> pctPoliceA
 racePctA -> violentCrimes
+racePctB -> medRent
 racePctB -> pctBSorMore
 racePctB -> pctNotHSGrad
 racePctB -> pctPoliceB
 racePctB -> violentCrimes
+racePctH -> medRent
 racePctH -> pctBSorMore
 racePctH -> pctNotHSGrad
 racePctH -> pctPoliceH
 racePctH -> violentCrimes
+racePctW -> medRent
 racePctW -> pctBSorMore
 racePctW -> pctNotHSGrad
 racePctW -> pctPoliceW
 racePctW -> violentCrimes
-
-agePct16t24 -> medRent
 }
 ')
 
