@@ -54,24 +54,23 @@ library(dagitty)
 # Our DAG
 g <- dagitty('dag {
 bb="-6.781,-7.29,8.351,9.149"
-agePct16t24 [pos="-0.118,-2.525"]
-medRent [pos="-2.209,-1.373"]
-numStreet [pos="-1.322,-0.080"]
+agePct16t24 [pos="-1.343,-0.789"]
+medRent [pos="-2.884,-2.649"]
+numStreet [pos="-1.290,0.876"]
 pctBSorMore [pos="-0.878,-4.491"]
 pctNotHSGrad [pos="0.759,-4.562"]
 pctPoliceA [pos="2.902,-3.499"]
 pctPoliceB [pos="2.966,0.345"]
 pctPoliceH [pos="2.913,-1.001"]
 pctPoliceW [pos="2.913,-2.330"]
-pctUnemployed [pos="0.801,-2.808"]
-perCapInc [pos="-0.857,-2.649"]
-policeOperBudg [pos="0.495,2.046"]
+pctUnemployed [pos="0.062,-1.232"]
+perCapInc [pos="-1.364,-2.684"]
+pop [pos="-2.884,0.859"]
 racePctA [pos="1.857,-3.481"]
 racePctB [pos="1.878,0.363"]
 racePctH [pos="1.867,-1.037"]
 racePctW [pos="1.846,-2.295"]
-violentCrimes [pos="-0.044,-0.204"]
-policeOperBudg -> numStreet
+violentCrimes [pos="0.241,1.992"]
 agePct16t24 -> pctUnemployed
 agePct16t24 -> perCapInc
 agePct16t24 -> violentCrimes
@@ -85,7 +84,8 @@ pctUnemployed -> numStreet
 pctUnemployed -> violentCrimes
 perCapInc -> medRent
 perCapInc -> violentCrimes
-policeOperBudg -> violentCrimes
+pop -> medRent
+pop -> numStreet
 racePctA -> pctBSorMore
 racePctA -> pctNotHSGrad
 racePctA -> pctPoliceA
@@ -103,22 +103,8 @@ racePctW -> pctNotHSGrad
 racePctW -> pctPoliceW
 racePctW -> violentCrimes
 }
+
 ')
-
- 
-# racePctA -> pctUnemployed
-# racePctB -> pctUnemployed
-# racePctH -> pctUnemployed
-# racePctW -> pctUnemployed
-
-# medRent -> numStreet
-# medRent -> perCapInc
-# pctLess9thGrade -> perCapInc
-# pctBSorMore -> perCapInc
-# pctNotHSGrad -> perCapInc
-# numStreet -> violentCrimes
-# pctUnemployed -> numStreet
-
 
 plot(g)
 # ici <- impliedConditionalIndependencies(g)
