@@ -50,26 +50,27 @@ df_3 <- df_2[complete.cases(df_2),]
 
 # Import dagitty
 library(dagitty)
+library(bnlearn)
 
 # Our DAG
 g <- dagitty('dag {
 bb="-6.781,-7.29,8.351,9.149"
-agePct16t24 [pos="1.339,-2.611"]
-medRent [pos="-2.768,-2.523"]
-numStreet [pos="-0.530,2.369"]
+agePct16t24 [pos="2.670,-4.006"]
+medRent [pos="-3.560,-3.600"]
+numStreet [pos="-1.121,2.015"]
 pctBSorMore [pos="-1.733,-6.248"]
-pctNotHSGrad [pos="1.170,-5.701"]
-pctPoliceA [pos="6.693,-5.312"]
-pctPoliceB [pos="6.936,0.250"]
-pctPoliceH [pos="6.841,-1.428"]
-pctPoliceW [pos="6.683,-3.193"]
+pctNotHSGrad [pos="2.638,-6.531"]
+pctPoliceA [pos="7.327,-3.335"]
+pctPoliceB [pos="7.422,2.810"]
+pctPoliceH [pos="7.084,1.062"]
+pctPoliceW [pos="7.158,-1.781"]
 pctUnemployed [pos="-0.498,-0.121"]
-perCapInc [pos="-0.857,-3.970"]
+perCapInc [pos="-4.585,1.327"]
 population [pos="-2.958,7.295"]
-racePctA [pos="4.919,-5.754"]
-racePctB [pos="5.225,0.550"]
-racePctH [pos="5.341,-1.657"]
-racePctW [pos="5.246,-3.317"]
+racePctA [pos="5.965,-3.388"]
+racePctB [pos="5.869,3.004"]
+racePctH [pos="6.049,1.133"]
+racePctW [pos="5.922,-1.039"]
 violentCrimes [pos="3.494,7.436"]
 agePct16t24 -> medRent
 agePct16t24 -> pctUnemployed
@@ -79,17 +80,36 @@ medRent -> numStreet
 medRent -> pctUnemployed
 numStreet -> violentCrimes
 pctBSorMore -> medRent
+pctBSorMore -> pctPoliceB
+pctBSorMore -> pctPoliceH
+pctBSorMore -> pctPoliceW
 pctBSorMore -> pctUnemployed
 pctBSorMore -> perCapInc
 pctNotHSGrad -> medRent
+pctNotHSGrad -> numStreet
+pctNotHSGrad -> pctPoliceB
+pctNotHSGrad -> pctPoliceH
+pctNotHSGrad -> pctPoliceW
 pctNotHSGrad -> pctUnemployed
 pctNotHSGrad -> perCapInc
+pctPoliceA -> numStreet
+pctPoliceA -> violentCrimes
+pctPoliceB -> pctUnemployed
+pctPoliceB -> perCapInc
+pctPoliceH -> medRent
+pctPoliceW -> perCapInc
 pctUnemployed -> numStreet
 pctUnemployed -> violentCrimes
 perCapInc -> medRent
+perCapInc -> numStreet
+perCapInc -> pctUnemployed
 perCapInc -> violentCrimes
 population -> medRent
 population -> numStreet
+population -> pctPoliceB
+population -> pctPoliceH
+population -> pctPoliceW
+population -> perCapInc
 population -> racePctA
 population -> racePctB
 population -> racePctH
@@ -99,21 +119,27 @@ racePctA -> numStreet
 racePctA -> pctBSorMore
 racePctA -> pctNotHSGrad
 racePctA -> pctPoliceA
+racePctA -> pctUnemployed
+racePctA -> perCapInc
 racePctA -> violentCrimes
 racePctB -> medRent
 racePctB -> pctBSorMore
 racePctB -> pctNotHSGrad
 racePctB -> pctPoliceB
+racePctB -> pctUnemployed
+racePctB -> perCapInc
 racePctB -> violentCrimes
 racePctH -> medRent
 racePctH -> pctBSorMore
 racePctH -> pctNotHSGrad
 racePctH -> pctPoliceH
+racePctH -> perCapInc
 racePctH -> violentCrimes
-racePctW -> medRent
 racePctW -> pctBSorMore
 racePctW -> pctNotHSGrad
 racePctW -> pctPoliceW
+racePctW -> pctUnemployed
+racePctW -> perCapInc
 racePctW -> violentCrimes
 }
 ')
@@ -122,6 +148,14 @@ plot(g)
 # ici <- impliedConditionalIndependencies(g)
 test_results <- localTests(g, df_3)
 above_p_value <- test_results[test_results$p.value < 0.05,]
+above_p_value <- above_p_value[,1:2]
 print(above_p_value)
 plotLocalTestResults(test_results)
+
+
+
+
+# summary(lm( numStreet~pctNotHSGrad+medRent + pctUnemployed + perCapInc + population + racePctA,as.data.frame(scale(df_3))))
+# nmSt _||_ pNHS | mdRn, pctU, prCI, pplt, rcPA
+
 
