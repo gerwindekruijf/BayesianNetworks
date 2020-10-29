@@ -4,7 +4,7 @@ Our data did not come with the attribute names
 instead of adding the attribute names, we manually delete Vx for every
 x we do not want, then we change Vx to the right name
 
-V6 = pop
+V6 = population
 V8 = racePctBlack
 V9 = racePctWhite
 V10 = racePctAsian

@@ -144,6 +144,8 @@ racePctW -> violentCrimes
 }
 ')
 
+#racePctW -> medRent
+
 plot(g)
 # ici <- impliedConditionalIndependencies(g)
 test_results <- localTests(g, df_3)
