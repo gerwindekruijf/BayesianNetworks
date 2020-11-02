@@ -20,25 +20,27 @@
 # Import for Olivier
 
 # Import for Dirren
-# initial_df <- read.csv(
-#     "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
-#     header = FALSE)
+initial_df <- read.csv(
+    "D:/Documents/Github/BayesianNetworks/communities.csv", na.strings = "?",
+    header = FALSE)
 
 # All the vars which have to be kept
-myvars <- c("V6", "V8", "V9", "V10", "V11", "V14", "V18", "V26", "V35", "V36",
-            "V37", "V38", "V91", "V95", "V96", "V111", "V112", "V113",
-            "V114", "V123", "V128")
+myvars <- c("V6", "V8", "V9", "V10", "V11", "V14", "V26", "V36",
+            "V37", "V38", "V91", "V96", "V111", "V112", "V113",
+            "V114", "V128")
 # "V123" "policeOperBudg"
 # Remove all other vars from data
 df_2 <- initial_df[myvars]
 
 # Change column names
 colnames(df_2) <- c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
-                    "agePct16t24", "medIncome", "perCapInc", "pctLess9thGrade",
+                    "agePct16t24", "perCapInc",
                     "pctNotHSGrad", "pctBSorMore", "pctUnemployed", "medRent",
-                    "numInShelters", "numStreet", "pctPoliceW", "pctPoliceB", 
-                    "pctPoliceH", "pctPoliceA", "policeOperBudg", "violentCrimes"
+                    "numStreet", "pctPoliceW", "pctPoliceB", 
+                    "pctPoliceH", "pctPoliceA", "violentCrimes"
                     )
+
+
 
 # Change '?' with NA
 df_2[df_2 == "?"] <- NA
@@ -47,7 +49,7 @@ df_2[df_2 == "?"] <- NA
 # Keep the records which don't have NA
 df_3 <- df_2[complete.cases(df_2),]
 
-
+df_wrong <- df_2[!complete.cases(df_2),]
 # Import dagitty
 library(dagitty)
 library(bnlearn)
@@ -148,16 +150,45 @@ racePctW -> violentCrimes
 
 plot(g)
 # ici <- impliedConditionalIndependencies(g)
-test_results <- localTests(g, df_3)
-above_p_value <- test_results[test_results$p.value < 0.05,]
-above_p_value <- above_p_value[,1:2]
-print(above_p_value)
-plotLocalTestResults(test_results)
+# test_results <- localTests(g, df_3)
+# above_p_value <- test_results[test_results$p.value < 0.05,]
+# above_p_value <- above_p_value[,1:2]
+# print(above_p_value)
+# plotLocalTestResults(test_results)
 
 
 
 
 # summary(lm( numStreet~pctNotHSGrad+medRent + pctUnemployed + perCapInc + population + racePctA,as.data.frame(scale(df_3))))
 # nmSt _||_ pNHS | mdRn, pctU, prCI, pplt, rcPA
+
+
+net <- model2network(toString(g,"bnlearn"))
+fit <- bn.fit( net,as.data.frame(df_3) )
+
+predictions <- predict(fit,node="violentCrimes", data= subset(df_wrong,select = c("numStreet","pctUnemployed", "racePctB", "racePctW")), method = "bayes-lw")
+predictions_forall <- predict(fit,node="violentCrimes", data= subset(df_wrong,select = c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
+                                                                                         "agePct16t24", "perCapInc",
+                                                                                         "pctNotHSGrad", "pctBSorMore", "pctUnemployed", "medRent",
+                                                                                         "numStreet")), method = "bayes-lw")
+
+library(Metrics)
+
+MSE_4 <- sqrt(sum((df_wrong$violentCrimes - predictions)**(2))/nrow(df_wrong)) 
+MSE <- sqrt(sum((df_wrong$violentCrimes - predictions_forall)**(2))/nrow(df_wrong))
+
+population_predict <- predict(fit,node="violentCrimes", data=data.frame(population= as.double(seq(from = 0, to = 0.99, by = 0.01 ))), method = "bayes-lw")
+perCapInc_predict <- predict(fit,node="violentCrimes", data=data.frame(perCapInc = as.double(seq(from = 0, to = 0.99, by = 0.01 ))), method = "bayes-lw")
+pctNotHSGrad_predict <- predict(fit,node="violentCrimes", data=data.frame(pctNotHSGrad = as.double(seq(from = 0, to = 0.99, by = 0.01 ))), method = "bayes-lw")
+pctBsorMore_predict <- predict(fit,node="violentCrimes", data=data.frame(pctBSorMore = as.double(seq(from = 0, to = 0.99, by = 0.01 ))), method = "bayes-lw")
+medRent_predict <- predict(fit,node="violentCrimes", data=data.frame(medRent = as.double(seq(from = 0, to = 0.99, by = 0.01 ))), method = "bayes-lw")
+pctPoliceB_predict <- predict(fit,node="violentCrimes", data=data.frame(pctPoliceB= as.double(seq(from = 0, to = 0.99, by = 0.01 ))), method = "bayes-lw")
+pctPoliceH_predict <- predict(fit,node="violentCrimes", data=data.frame(pctPoliceH= as.double(seq(from = 0, to = 0.99, by = 0.01 ))), method = "bayes-lw")
+pctPoliceW_predict <- predict(fit,node="violentCrimes", data=data.frame(pctPoliceW= as.double(seq(from = 0, to = 0.99, by = 0.01 ))), method = "bayes-lw")
+
+#plot(population_predict) 
+#plot(pctNotHSGrad_predict) #Let op BS or more niet
+#plot(pctPoliceB_predict) #via pctUnemployed.
+#plot(pctPoliceW_predict) #via perCapInc and pctUnemployed
 
 
