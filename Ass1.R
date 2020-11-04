@@ -125,15 +125,12 @@ g <- dagitty('dag {
 
 # Plot the DAG
 plot(g)
-# ici <- impliedConditionalIndependencies(g)
 # test_results <- localTests(g, df_final)
 # above_p_value <- test_results[test_results$p.value < 0.05,]
 # above_p_value <- above_p_value[,1:2]
 # print(above_p_value)
-# plotLocalTestResults(test_results)
 
-# summary(lm( numStreet~pctNotHSGrad+medRent + pctUnemployed + perCapInc + population + racePctA,as.data.frame(scale(df_final))))
-# nmSt _||_ pNHS | mdRn, pctU, prCI, pplt, rcPA
+
 
 # Import bnlearn
 library(bnlearn)
@@ -155,11 +152,11 @@ predictions_forall <- predict(fit, node="violentCrimes",
 # Import metrics
 library(Metrics)
 
-# Calculate RMSE for the predictions
+# Calculate RMSE for the predictions; RMSE_4 is only for the 4 main factors
 RMSE_4 <- sqrt(sum((df_na$violentCrimes - predictions)**(2)) / nrow(df_na)) 
 RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
 
-# Predict values for all the nodes with significant influence
+# Predict values for all the nodes without direct edge to crime rate
 seq_0_1 = seq(from = 0, to = 0.99, by = 0.01)
 population_pred   <- predict(fit,node="violentCrimes", data=data.frame(population = as.double(seq_0_1)), method = "bayes-lw")
 perCapInc_pred    <- predict(fit,node="violentCrimes", data=data.frame(perCapInc = as.double(seq_0_1)), method = "bayes-lw")
@@ -170,10 +167,10 @@ pctPoliceB_pred   <- predict(fit,node="violentCrimes", data=data.frame(pctPolice
 pctPoliceH_pred   <- predict(fit,node="violentCrimes", data=data.frame(pctPoliceH = as.double(seq_0_1)), method = "bayes-lw")
 pctPoliceW_pred   <- predict(fit,node="violentCrimes", data=data.frame(pctPoliceW = as.double(seq_0_1)), method = "bayes-lw")
 
-# Plot the predictions (used in report)
+# The 4 variables with "significant" indirect effect on crime rate 
 # plot(population_pred) 
-# plot(pctNotHSGrad_pred) # Let op BS or more niet
-# plot(pctPoliceB_pred) #via pctUnemployed.
-# plot(pctPoliceW_pred) #via perCapInc and pctUnemployed
+# plot(pctNotHSGrad_pred) 
+# plot(pctPoliceB_pred)
+# plot(pctPoliceW_pred)
 
 
