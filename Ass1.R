@@ -134,9 +134,12 @@ plot(g)
 
 # Import bnlearn
 library(bnlearn)
-net <- model2network(toString(g,"bnlearn"))
-fit <- bn.fit(net,as.data.frame(df_final) )
 
+# Fit the DAG to the data
+net <- model2network(toString(g,"bnlearn"))
+fit <- bn.fit(net,as.data.frame(df_final))
+
+# Acquire predicted probabilities
 predictions <- predict(fit, node="violentCrimes", 
                        data=subset(df_na, select = 
                        c("numStreet","pctUnemployed", "racePctB", "racePctW")), 
@@ -156,7 +159,7 @@ library(Metrics)
 RMSE_4 <- sqrt(sum((df_na$violentCrimes - predictions)**(2)) / nrow(df_na)) 
 RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
 
-# Predict values for all the nodes without direct edge to crime rate
+# Predict values for all the nodes without a direct edge to crime rate
 seq_0_1 = seq(from = 0, to = 0.99, by = 0.01)
 population_pred   <- predict(fit,node="violentCrimes", data=data.frame(population = as.double(seq_0_1)), method = "bayes-lw")
 perCapInc_pred    <- predict(fit,node="violentCrimes", data=data.frame(perCapInc = as.double(seq_0_1)), method = "bayes-lw")
