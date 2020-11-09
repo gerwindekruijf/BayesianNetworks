@@ -54,7 +54,8 @@ Iterations for building the final DAG:
 - Initial graph
 
 2:
-- Add edges from Education to Race (all variables belonging to the set of Education and Race) pct12t29 changed to pct16t24
+- Add edges from Education to Race (all variables belonging to the set of Education and Race)
+- pct12t29 changed to pct16t24
 - Add edge from pct16t24 to [Income per capita, Unemployed]
 
 3:
