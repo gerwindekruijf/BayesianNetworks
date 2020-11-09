@@ -6,29 +6,50 @@ x we do not want, then we change Vx to the right name
 Attributes with "--" behind it are removed throughout the iterations
 
 V6 = population
+
 V8 = racePctBlack
+
 V9 = racePctWhite
+
 V10 = racePctAsian
+
 V11 = racePctHisp
+
 V14 = agePct16t24   (was agePct12t29)
+
 V18 = medIncome --
+
 V26 = perCapInc
+
 V35 = PctLess9thGrade --
+
 V36 = PctNotHSGrad
+
 V37 = PctBSorMore
+
 V38 = PctUnemployed
+
 V91 = MedRent
+
 V95 = NumInShelters (homeless in shelters) --
+
 V96 = NumStreet (homeless on street)
+
 V111 = PctPoliceWhite
+
 V112 = PctPoliceBlack
+
 V113 = PctPoliceHisp
+
 V114 = PctPoliceAsian
+
 V123 = PoliceOperBudg --
+
 V128 = ViolentCrimesPerPop
 
 
 Iterations for building the final DAG:
+
 1:
 - Initial graph
 
