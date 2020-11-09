@@ -152,9 +152,6 @@ predictions_forall <- predict(fit, node="violentCrimes",
                       "pctUnemployed", "medRent", "numStreet")), 
                       method = "bayes-lw")
 
-# Import metrics
-library(Metrics)
-
 # Calculate RMSE for the predictions; RMSE_4 is only for the 4 main factors
 RMSE_4 <- sqrt(sum((df_na$violentCrimes - predictions)**(2)) / nrow(df_na)) 
 RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
