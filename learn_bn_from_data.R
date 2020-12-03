@@ -127,9 +127,7 @@ net <-  model2network(toString(manual_graph,"bnlearn"))
 library(dagitty)
 library(bnlearn)
 
-pc_graph <- pc.stable(df_final, undirected = FALSE)
-
-plot(pc_graph)
+# PC scoring -------------------------------------------------------------------
 
 ordering <- c("population","racePctW", "racePctB",  "racePctA", "racePctH", 
               "agePct16t24", "perCapInc", "pctBSorMore",
@@ -137,11 +135,14 @@ ordering <- c("population","racePctW", "racePctB",  "racePctA", "racePctH",
               "numStreet", "pctPoliceW", "pctPoliceB", 
               "pctPoliceH", "pctPoliceA", "violentCrimes"
 )
-RMSE_list <- list()
+
+score_list <- data.frame()
+names(score_list) <- c("Edges", "RMSE", "Label")
+# nominal type 1 error rate
 for (a in seq(0,0.95,by = 0.05)){
-  pc_graph_alpha <- pc.stable(df_final, alpha = a)
   tryCatch(
     {
+      pc_graph_alpha <- pc.stable(df_final, alpha = a)
       pc_graph_alpha <- pdag2dag(pc_graph_alpha, ordering = ordering)
       pc_graph_fit_alpha <- bn.fit(pc_graph_alpha,as.data.frame(df_final))
       
@@ -151,59 +152,49 @@ for (a in seq(0,0.95,by = 0.05)){
                                                       "agePct16t24", "perCapInc", "pctNotHSGrad", "pctBSorMore", 
                                                       "pctUnemployed", "medRent", "numStreet")), 
                                     method = "bayes-lw")
-      RMSE_list <- c(RMSE_list, sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na)))
+      RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
+      
+      score <- data.frame(length(pc_graph_alpha$arcs) / 2, RMSE, a)
+      names(score) <- c("Edges", "RMSE", "Label")
+      score_list <- rbind(score_list, score)
     },
     error = function(cond){
-      RMSE_list <- c(RMSE_list, 0)
-      message(paste("The graph cannot be directed for alpha = ",a))
+      message(paste("The graph cannot be directed for alpha = ", a))
     }
   )
 }
 
+plot(RMSE ~Edges, col="lightblue", pch=19, cex=2,data=score_list)
+text(RMSE ~Edges, labels=score_list$Label,data=score_list, cex=0.9, font=2)
 
-pc_graph <- set.arc(pc_graph, from = "racePctW", to = "violentCrimes")
-pc_graph <- set.arc(pc_graph, from = "racePctB", to = "pctPoliceB")
-pc_graph <- set.arc(pc_graph, from = "racePctW", to = "racePctB")
-pc_graph <- set.arc(pc_graph, from = "racePctA", to = "pctPoliceA")
-pc_graph <- set.arc(pc_graph, from = "pctNotHSGrad", to = "pctBSorMore")
+# Tabu scoring -------------------------------------------------------------------
 
-pc_graph_fit <- bn.fit(pc_graph,as.data.frame(df_final))
-
-predictions_forall <- predict(pc_graph_fit, node="violentCrimes", 
-                              data = subset(df_na, select = 
-                                              c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
-                                                "agePct16t24", "perCapInc", "pctNotHSGrad", "pctBSorMore", 
-                                                "pctUnemployed", "medRent", "numStreet")), 
-                              method = "bayes-lw")
-RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
-
-plot(pc_graph)
-
-
-
-tabu_graph <- tabu(df_final, k = 10)
-RMSE_list <- list()
-for (a in seq(10, 1, by = -1)){
-  tabu_graph <- tabu(df_final, k = a)
-  tabu_graph_fit <- bn.fit(tabu_graph,as.data.frame(df_final))
-  
-  predictions_forall <- predict(tabu_graph_fit, node="violentCrimes", 
-                                data = subset(df_na, select = 
-                                                c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
-                                                  "agePct16t24", "perCapInc", "pctNotHSGrad", "pctBSorMore", 
-                                                  "pctUnemployed", "medRent", "numStreet")), 
-                                method = "bayes-lw")
-  RMSE_list <- c(RMSE_list, sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na)))
+score_list <- data.frame()
+names(score_list) <- c("Edges", "RMSE", "Label")
+# score value k
+for (k in seq(1, 100, by = 1)){
+  tryCatch(
+    {
+      tabu_graph <- tabu(df_final, k = k)
+      tabu_graph_fit <- bn.fit(tabu_graph,as.data.frame(df_final))
+      
+      predictions_forall <- predict(tabu_graph_fit, node="violentCrimes", 
+                                    data = subset(df_na, select = 
+                                                    c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
+                                                      "agePct16t24", "perCapInc", "pctNotHSGrad", "pctBSorMore", 
+                                                      "pctUnemployed", "medRent", "numStreet")), 
+                                    method = "bayes-lw")
+      
+      RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
+      score <- data.frame(length(tabu_graph$arcs) / 2, RMSE, k)
+      names(score) <- c("Edges", "RMSE", "Label")
+      score_list <- rbind(score_list, score)
+    },
+    error = function(cond){
+      message(paste("The graph cannot be directed for score = ", k))
+    }
+  )
 }
 
-#mmhc_graph <- mmhc(df_final)
-#plot(mmhc_graph)
-#mmhc_graph_fit <- bn.fit(mmhc_graph,as.data.frame(df_final))
-#
-#predictions_forall_mmhc <- predict(mmhc_graph_fit, node="violentCrimes", 
-#                              data = subset(df_na, select = 
-#                                              c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
-#                                                "agePct16t24", "perCapInc", "pctNotHSGrad", "pctBSorMore", 
-#                                                "pctUnemployed", "medRent", "numStreet")), 
-#                              method = "bayes-lw")
-#RMSE_mmhc <- sqrt(sum((df_na$violentCrimes - predictions_forall_mmhc)**(2)) / nrow(df_na))
+plot(RMSE ~Edges, col="lightblue", pch=19, cex=2,data=score_list)
+text(RMSE ~Edges, labels=score_list$Label,data=score_list, cex=0.9, font=2)
