@@ -174,3 +174,17 @@ pctPoliceW_pred   <- predict(fit,node="violentCrimes", data=data.frame(pctPolice
 # plot(pctPoliceW_pred)
 
 
+pc_graph <- pc.stable(df_final, undirected = FALSE)
+
+plot(pc_graph)
+
+mmhc_graph <- mmhc(df_final)
+plot(mmhc_graph)
+
+
+
+
+
+
+
+
