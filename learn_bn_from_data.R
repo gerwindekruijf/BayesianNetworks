@@ -121,11 +121,22 @@ manual_graph <- dagitty('dag {
 ')
 
 
-net <-  model2network(toString(manual_graph,"bnlearn"))
+net <- model2network(toString(manual_graph,"bnlearn"))
 
 # Import dagitty
 library(dagitty)
 library(bnlearn)
+
+complexity <- function(network){
+  x <- (length(network$arcs) / 2) / length(network$nodes)
+  y <- 0
+  
+  for (n in network$nodes){
+    y <- y + (x - (length(n[["parents"]]) + length(n[["children"]])) / 2)^2
+  }
+  
+  return(y)
+}
 
 # PC scoring -------------------------------------------------------------------
 
@@ -136,8 +147,8 @@ ordering <- c("population","racePctW", "racePctB",  "racePctA", "racePctH",
               "pctPoliceH", "pctPoliceA", "violentCrimes"
 )
 
-score_list <- data.frame()
-names(score_list) <- c("Edges", "RMSE", "Label")
+score_list <- as.data.frame(matrix(,0,3))
+names(score_list) <- c("Complexity", "RMSE", "Label")
 # nominal type 1 error rate
 for (a in seq(0,0.95,by = 0.05)){
   tryCatch(
@@ -145,7 +156,7 @@ for (a in seq(0,0.95,by = 0.05)){
       pc_graph_alpha <- pc.stable(df_final, alpha = a)
       pc_graph_alpha <- pdag2dag(pc_graph_alpha, ordering = ordering)
       pc_graph_fit_alpha <- bn.fit(pc_graph_alpha,as.data.frame(df_final))
-      
+
       predictions_forall <- predict(pc_graph_fit_alpha, node="violentCrimes", 
                                     data = subset(df_na, select = 
                                                     c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
@@ -154,12 +165,13 @@ for (a in seq(0,0.95,by = 0.05)){
                                     method = "bayes-lw")
       RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
       
-      score <- data.frame(length(pc_graph_alpha$arcs) / 2, RMSE, a)
-      names(score) <- c("Edges", "RMSE", "Label")
+      score <- data.frame(complexity(pc_graph_alpha), RMSE, a) #length(pc_graph_alpha$arcs) / 2
+      names(score) <- c("Complexity", "RMSE", "Label")
       score_list <- rbind(score_list, score)
     },
     error = function(cond){
       message(paste("The graph cannot be directed for alpha = ", a))
+      
     }
   )
 }
@@ -169,15 +181,15 @@ text(RMSE ~Edges, labels=score_list$Label,data=score_list, cex=0.9, font=2)
 
 # Tabu scoring -------------------------------------------------------------------
 
-score_list <- data.frame()
-names(score_list) <- c("Edges", "RMSE", "Label")
+score_list <- as.data.frame(matrix(,0,3))
+names(score_list) <- c("Complexity", "RMSE", "Label")
 # score value k
-for (k in seq(1, 100, by = 1)){
+for (k in seq(1, 10, by = 1)){
   tryCatch(
     {
       tabu_graph <- tabu(df_final, k = k)
       tabu_graph_fit <- bn.fit(tabu_graph,as.data.frame(df_final))
-      
+
       predictions_forall <- predict(tabu_graph_fit, node="violentCrimes", 
                                     data = subset(df_na, select = 
                                                     c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
@@ -186,8 +198,8 @@ for (k in seq(1, 100, by = 1)){
                                     method = "bayes-lw")
       
       RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
-      score <- data.frame(length(tabu_graph$arcs) / 2, RMSE, k)
-      names(score) <- c("Edges", "RMSE", "Label")
+      score <- data.frame(complexity(tabu_graph), RMSE, k)
+      names(score) <- c("Complexity", "RMSE", "Label")
       score_list <- rbind(score_list, score)
     },
     error = function(cond){
