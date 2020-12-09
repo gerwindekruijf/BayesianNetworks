@@ -166,6 +166,7 @@ for (a in seq(0,0.95,by = 0.05)){
       RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
       
       score <- data.frame(complexity(pc_graph_alpha), RMSE, a) #length(pc_graph_alpha$arcs) / 2
+      print(paste(a, length(pc_graph_alpha$arcs) / 2))
       names(score) <- c("Complexity", "RMSE", "Label")
       score_list <- rbind(score_list, score)
     },
@@ -176,10 +177,10 @@ for (a in seq(0,0.95,by = 0.05)){
   )
 }
 
-plot(RMSE ~Edges, col="lightblue", pch=19, cex=2,data=score_list)
-text(RMSE ~Edges, labels=score_list$Label,data=score_list, cex=0.9, font=2)
+plot(RMSE ~Complexity, col="lightblue", pch=19, cex=2,data=score_list)
+text(RMSE ~Complexity, labels=score_list$Label,data=score_list, cex=0.9, font=2)
 
-# Tabu scoring -------------------------------------------------------------------
+# Tabu scoring -----------------------------------------------------------------
 
 score_list <- as.data.frame(matrix(,0,3))
 names(score_list) <- c("Complexity", "RMSE", "Label")
@@ -200,6 +201,8 @@ for (k in seq(1, 10, by = 1)){
       RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
       score <- data.frame(complexity(tabu_graph), RMSE, k)
       names(score) <- c("Complexity", "RMSE", "Label")
+      print(paste(k, length(tabu_graph$arcs) / 2))
+      
       score_list <- rbind(score_list, score)
     },
     error = function(cond){
@@ -208,5 +211,38 @@ for (k in seq(1, 10, by = 1)){
   )
 }
 
-plot(RMSE ~Edges, col="lightblue", pch=19, cex=2,data=score_list)
-text(RMSE ~Edges, labels=score_list$Label,data=score_list, cex=0.9, font=2)
+plot(RMSE ~Complexity, col="lightblue", pch=19, cex=2,data=score_list)
+text(RMSE ~Complexity, labels=score_list$Label,data=score_list, cex=0.9, font=2)
+
+# Best of all three ------------------------------------------------------------
+
+net_fit <- bn.fit(net,as.data.frame(df_final))
+predictions_forall <- predict(net_fit, node="violentCrimes", 
+                              data = subset(df_na, select = 
+                                              c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
+                                                "agePct16t24", "perCapInc", "pctNotHSGrad", "pctBSorMore", 
+                                                "pctUnemployed", "medRent", "numStreet")), 
+                              method = "bayes-lw")
+
+RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
+score <- data.frame(complexity(net), RMSE, k)
+names(score) <- c("Complexity", "RMSE", "Label")
+print(paste(k, length(net$arcs) / 2))
+
+
+pc_graph_alpha <- pc.stable(df_final, alpha = 0.05)
+pc_graph_alpha <- pdag2dag(pc_graph_alpha, ordering = ordering)
+pc_graph_fit_alpha <- bn.fit(pc_graph_alpha,as.data.frame(df_final))
+
+predictions_forall <- predict(pc_graph_fit_alpha, node="violentCrimes", 
+                              data = subset(df_na, select = 
+                                              c("population", "racePctB", "racePctW", "racePctA", "racePctH", 
+                                                "agePct16t24", "perCapInc", "pctNotHSGrad", "pctBSorMore", 
+                                                "pctUnemployed", "medRent", "numStreet")), 
+                              method = "bayes-lw")
+RMSE <- sqrt(sum((df_na$violentCrimes - predictions_forall)**(2)) / nrow(df_na))
+
+score <- data.frame(complexity(pc_graph_alpha), RMSE, a) #length(pc_graph_alpha$arcs) / 2
+print(paste(a, length(pc_graph_alpha$arcs) / 2))
+names(score) <- c("Complexity", "RMSE", "Label")
+score_list <- rbind(score_list, score)
